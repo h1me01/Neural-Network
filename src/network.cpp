@@ -26,13 +26,11 @@ float Network::feedForward(const NetInput &netInput) {
     int inputIndex = 0;
     for (int i = 0; i < 6; ++i) {
         for (int j = 0; j < 64; ++j) {
-            input[inputIndex] = getBit(netInput.pieces[WHITE][i], j);
-            inputIndex++;
+            input[inputIndex++] = getBit(netInput.pieces[WHITE][i], j);
         }
 
         for (int j = 0; j < 64; ++j) {
-            input[inputIndex] = getBit(netInput.pieces[BLACK][i], j);
-            inputIndex++;
+            input[inputIndex++] = getBit(netInput.pieces[BLACK][i], j);
         }
     }
 

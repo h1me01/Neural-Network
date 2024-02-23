@@ -6,49 +6,36 @@ namespace Tools {
 }
 
 float getBit(uint64_t bitboard, int pos) {
-    uint64_t maskedBit = (bitboard >> pos) & 1;
-    return static_cast<float>(maskedBit);
+    return (bitboard >> pos) & 1;
 }
 
 void shuffleData(vector<NetInput>& data) {
+    uniform_int_distribution<int> dist;
     for (int i = data.size() - 1; i > 0; --i) {
-        uniform_int_distribution<int> dist(0, i);
-        int j = dist(Tools::gen);
-        swap(data[i], data[j]);
+        swap(data[i], data[dist(Tools::gen, decltype(dist)::param_type{0, i})]);
     }
 }
 
 vector<NetInput> loadNetData(const string &filePath, int dataSize) {
     vector<NetInput> netData;
-
     ifstream file(filePath, ios::binary);
-    if (!file.is_open()) {
-        cerr << "Error: Unable to open file for reading." << endl;
+
+    if (!file) {
+        cerr << "Error: Unable to open file for reading.\n";
         return netData;
     }
 
-    int count = 0;
     NetInput input;
-    while (file.read(reinterpret_cast<char *>(&input), sizeof(NetInput))) {
-        if (dataSize <= count) {
-            break;
-        }
-        count++;
+    while (netData.size() < dataSize && file.read(reinterpret_cast<char *>(&input), sizeof(NetInput))) {
         netData.push_back(input);
     }
 
-    file.close();
     return netData;
 }
 
 int pieceIndex(char _c) {
-    const char pieces[] = "PpNnBbRrQqKk";
-    for (int i = 0; pieces[i]; ++i) {
-        if (_c == pieces[i]) {
-            return i;
-        }
-    }
-    return -1;
+    const string pieces = "PpNnBbRrQqKk";
+    return pieces.find(_c);
 }
 
 vector<float> fenToInput(string &fen) {
