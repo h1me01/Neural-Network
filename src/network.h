@@ -13,7 +13,7 @@ const float LEARNING_RATE = 0.001f;
 
 class Network {
 public:
-    Network(bool loadWeights = false);
+    explicit Network(bool loadWeights = false);
     ~Network();
 
     float feedForward(const NetInput &netInput);
@@ -24,7 +24,7 @@ public:
     void save();
     void load();
 
-    void train(vector<NetInput> &data, const int epochs, const int batchSize);
+    void train(vector<NetInput> &data, int epochs, int batchSize);
 
 private:
     Layer **layers;

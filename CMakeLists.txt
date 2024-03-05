@@ -12,8 +12,6 @@ add_executable(Astra_NNetwork
         src/neuron.h
         src/adam.h
         src/layer.h
-        src/common.cpp
-        src/adam.cpp
         src/layer.cpp
         src/neuron.cpp
         src/network.cpp
