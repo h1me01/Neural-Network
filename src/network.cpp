@@ -20,18 +20,11 @@ Network::~Network() {
     delete[] layers;
 }
 
-float Network::feedForward(const NetInput &netInput) {
-    float input[2 * 6 * 64];
+float Network::feedForward(SparseInput &sparseInput) {
+    float input[12 * 64];
 
-    int inputIndex = 0;
-    for (int i = 0; i < 6; ++i) {
-        for (int j = 0; j < 64; ++j) {
-            input[inputIndex++] = getBit(netInput.pieces[WHITE][i], j);
-        }
-
-        for (int j = 0; j < 64; ++j) {
-            input[inputIndex++] = getBit(netInput.pieces[BLACK][i], j);
-        }
+    for(int i = 0; i < 12 * 64; ++i) {
+        input[i] = sparseInput.get(i);
     }
 
     for (int i = 0; i < numLayers; ++i) {
@@ -58,12 +51,17 @@ void Network::feedBackward(float target) {
 }
 
 float Network::evaluate(string &fen) {
-    vector<float> input = fenToInput(fen);
+    SparseInput sparseInput = fenToInput(fen);
+
+    float input[12 * 64];
+
+    for(int i = 0; i < 12 * 64; ++i) {
+        input[i] = sparseInput.get(i);
+    }
 
     for (int i = 0; i < numLayers; ++i) {
-        float *layerOutput = layers[i]->feedForward(input.data());
-        input.resize(layers[i]->getNumNeurons());
-        copy_n(layerOutput, layers[i]->getNumNeurons(), input.begin());
+        float *layerOutput = layers[i]->feedForward(input);
+        copy_n(layerOutput, layers[i]->getNumNeurons(), input);
     }
 
     return input[0] * 250 - 125;
@@ -126,14 +124,14 @@ void Network::load() {
     file.close();
 }
 
-void Network::train(vector<NetInput> &data, const int epochs, const int batchSize) {
+void Network::train(vector<SparseInput> &data, const int epochs, const int batchSize) {
     int dataSize = data.size();
     int valSize = dataSize / 100;
     int trainingSize = dataSize - valSize;
 
     cout << "\nTraining Network with " << dataSize << " Positions\n" << endl;
 
-    vector<NetInput> valData(data.begin() + trainingSize, data.end());
+    vector<SparseInput> valData(data.begin() + trainingSize, data.end());
     data.resize(trainingSize);
 
     auto startTime = chrono::high_resolution_clock::now();
@@ -148,7 +146,7 @@ void Network::train(vector<NetInput> &data, const int epochs, const int batchSiz
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
             int endIdx = min((batch + 1) * batchSize, trainingSize);
-            vector<NetInput> minibatch(data.begin() + startIdx, data.begin() + endIdx);
+            vector<SparseInput> minibatch(data.begin() + startIdx, data.begin() + endIdx);
 
             for (auto &d: minibatch) {
                 feedForward(d);

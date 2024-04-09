@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 add_executable(Astra_NNetwork
         src/main.cpp
-        src/common.h
+        src/misc.h
         src/network.h
         src/neuron.h
         src/adam.h

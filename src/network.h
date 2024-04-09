@@ -4,8 +4,8 @@
 
 const string WEIGHTS_PATH = "C:/Users/semio/Downloads/weights.net";
 
-const int INPUT_NEURONS = 768;
-const int HIDDEN_NEURONS1 = 128;
+const int INPUT_NEURONS = 12 * 64;
+const int HIDDEN_NEURONS1 = 512;
 const int HIDDEN_NEURONS2 = 64;
 const int OUTPUT_NEURONS = 1;
 
@@ -16,7 +16,7 @@ public:
     explicit Network(bool loadWeights = false);
     ~Network();
 
-    float feedForward(const NetInput &netInput);
+    float feedForward(SparseInput &sparseInput);
     void feedBackward(float target);
 
     float evaluate(string &fen);
@@ -24,19 +24,19 @@ public:
     void save();
     void load();
 
-    void train(vector<NetInput> &data, int epochs, int batchSize);
+    void train(vector<SparseInput> &data, int epochs, int batchSize);
 
 private:
     Layer **layers;
     int numLayers;
 
-    float cost(const vector<NetInput> &data);
+    float cost(const vector<SparseInput> &data);
 
 };
 
-inline float Network::cost(const vector<NetInput> &data) {
+inline float Network::cost(const vector<SparseInput> &data) {
     float totalCost = 0;
-    for (const auto &d: data) {
+    for (auto d: data) {
         float prediction = feedForward(d);
         float error = prediction - d.target;
         totalCost += error * error;

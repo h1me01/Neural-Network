@@ -23,7 +23,7 @@ int main() {
     /*
      * LOAD AND NORMALIZE DATA
      */
-    vector<NetInput> DATA = loadNetData(DATA_PATH);
+    vector<SparseInput> DATA = getSparseData(DATA_PATH);
 
     vector<float> targets;
     for (auto &d: DATA) {
