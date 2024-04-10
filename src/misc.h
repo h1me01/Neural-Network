@@ -1,53 +1,15 @@
 #ifndef ASTRA_NNETWORK_MISC_H
 #define ASTRA_NNETWORK_MISC_H
 
-#include <iostream>
-#include <fstream>
-#include <chrono>
-#include <vector>
-#include <array>
-#include <cmath>
 #include <random>
-#include <algorithm>
-#include <immintrin.h>
-#include <cassert>
 
 using namespace std;
 
-enum Color : int {
-    WHITE, BLACK, NUM_COLORS = 2
-};
-
-struct NetInput {
-    uint64_t pieces[NUM_COLORS][6]{};
-    float target;
-    Color stm;
-
-    NetInput() {
-        target = 0.0f;
-    }
-};
-
-struct SparseInput {
-    array<float, 12 * 64> input;
-    float target;
-
-    SparseInput() : input{}, target(0) {}
-
-    void set(int idx) {
-        assert(idx >= 0 && idx < (12 * 64));
-        input[idx] = true;
-    }
-
-    float get(int idx) {
-        assert(idx >= 0 && idx < (12 * 64));
-        return input[idx];
-    }
-};
-
 namespace Tools {
-    inline random_device rd;
-    inline mt19937 gen(rd());
+    //inline random_device rd;
+    //inline mt19937 gen(rd());
+
+    inline std::mt19937 gen(42);
 } // namespace Tools
 
 const int DEBRUIJN64[64] = {

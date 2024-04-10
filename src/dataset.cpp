@@ -8,15 +8,12 @@ void shuffleData(vector<SparseInput> &data) {
 }
 
 int pieceIndex(char c) {
-    const string pieces = "pnbrwk";
+    const string pieces = "pnbrqk";
     return pieces.find(tolower(c));
 }
 
 int mirrorVertically(int sq) {
-    int rank = sq / 8;
-    int file = sq % 8;
-
-    return 8 * (7 - rank) + file;
+    return sq ^ 56;
 }
 
 int index(int psq, char p, Color view) {
@@ -88,6 +85,7 @@ SparseInput fenToInput(string &fen) {
             file++;
             int sq = 8 * rank + file;
             int idx = index(sq, c, stm);
+
             input.set(idx);
         }
     }

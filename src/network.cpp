@@ -141,7 +141,7 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
     cout << "--------------------------------------" << endl;
 
     for (int epoch = 1; epoch <= epochs; ++epoch) {
-        shuffleData(data);
+        //shuffleData(data);
 
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
