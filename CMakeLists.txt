@@ -15,4 +15,6 @@ add_executable(Astra_NNetwork
         src/layer.cpp
         src/neuron.cpp
         src/network.cpp
+        src/dataset.h
+        src/dataset.cpp
 )

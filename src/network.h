@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ASTRA_NNETWORK_NETWORK_H
+#define ASTRA_NNETWORK_NETWORK_H
 
 #include "layer.h"
 
@@ -43,3 +44,6 @@ inline float Network::cost(const vector<SparseInput> &data) {
     }
     return totalCost / data.size();
 }
+
+
+#endif //ASTRA_NNETWORK_NETWORK_H

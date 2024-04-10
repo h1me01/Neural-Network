@@ -1,6 +1,7 @@
-#pragma once
+#ifndef ASTRA_NNETWORK_ADAM_H
+#define ASTRA_NNETWORK_ADAM_H
 
-#include "misc.h"
+#include "dataset.h"
 
 class Adam {
 public:
@@ -66,3 +67,6 @@ private:
     __m256 epsilon_avx = _mm256_set1_ps(epsilon);
 
 };
+
+
+#endif //ASTRA_NNETWORK_ADAM_H

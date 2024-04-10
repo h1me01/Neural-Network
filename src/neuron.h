@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ASTRA_NNETWORK_NEURON_H
+#define ASTRA_NNETWORK_NEURON_H
 
 #include "adam.h"
 
@@ -60,3 +61,5 @@ private:
     float bias;
 
 };
+
+#endif //ASTRA_NNETWORK_NEURON_H

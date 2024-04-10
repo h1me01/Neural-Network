@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ASTRA_NNETWORK_LAYER_H
+#define ASTRA_NNETWORK_LAYER_H
 
 #include "neuron.h"
 
@@ -54,3 +55,5 @@ private:
     float *input;
 
 };
+
+#endif //ASTRA_NNETWORK_LAYER_H
