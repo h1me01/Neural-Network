@@ -6,7 +6,7 @@
 const string WEIGHTS_PATH = "C:/Users/semio/Downloads/weights.net";
 
 const int INPUT_NEURONS = 12 * 64;
-const int HIDDEN_NEURONS1 = 512;
+const int HIDDEN_NEURONS1 = 128;
 const int HIDDEN_NEURONS2 = 64;
 const int OUTPUT_NEURONS = 1;
 
