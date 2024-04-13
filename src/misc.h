@@ -7,7 +7,7 @@ using namespace std;
 
 namespace Tools {
     inline random_device rd;
-    inline mt19937 gen(rd());
+    inline mt19937 gen(42);
 } // namespace Tools
 
 const int DEBRUIJN64[64] = {

@@ -9,11 +9,12 @@
 enum ActivationType {
     NONE,
     SIGMOID,
+    LEAKY_RELU,
     RELU
 };
 
-float activate(float _x, ActivationType _type);
-float activateDer(float _x, ActivationType _type);
+float activate(float x, ActivationType type);
+float activateDer(float x, ActivationType type);
 
 /*
  * LAYER CLASS

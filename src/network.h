@@ -3,11 +3,10 @@
 
 #include "layer.h"
 
-const string WEIGHTS_PATH = "C:/Users/semio/Downloads/weights.net";
+const string WEIGHTS_PATH = "C:/Users/burio/Downloads/astra_weights_4-12-24.nnue";
 
 const int INPUT_NEURONS = 12 * 64;
-const int HIDDEN_NEURONS1 = 128;
-const int HIDDEN_NEURONS2 = 64;
+const int HIDDEN_NEURONS1 = 64;
 const int OUTPUT_NEURONS = 1;
 
 const float LEARNING_RATE = 0.001f;
@@ -37,11 +36,13 @@ private:
 
 inline float Network::cost(const vector<SparseInput> &data) {
     float totalCost = 0;
+
     for (auto d: data) {
         float prediction = feedForward(d);
         float error = prediction - d.target;
         totalCost += error * error;
     }
+
     return totalCost / data.size();
 }
 

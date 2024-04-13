@@ -1,11 +1,11 @@
 #include "network.h"
 
-const string DATA_PATH = "C:/Users/semio/Downloads/data.bin";
+const string DATA_PATH = "C:/Users/burio/Downloads/data.bin";
 
 const int EPOCHS = 10;
 const int BATCH_SIZE = 32;
 
-vector<string> testFen = {
+vector<string> TEST_POSITIONS = {
         "3k4/5K2/8/4P3/8/8/8/8 b - - 2 11",
         "4k3/8/3KP3/8/8/8/8/8 b - - 0 10",
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -15,8 +15,8 @@ vector<string> testFen = {
         "r5k1/p5p1/4p2p/4p3/3p4/P6K/5q2/8 b - - 0 33"
 };
 
-vector<float> testEval = {
-        114.0f, 0.0f, 0.2f, -5.5f, 4.1f, 122.0f, -122.0f
+vector<float> TEST_POSITIONS_EVAL = {
+        114, 0, 0.2f, -5.5f, 4.1f, 122, -122
 };
 
 int main() {
@@ -44,11 +44,11 @@ int main() {
     /*
      * PREDICTIONS
      */
-    for (int i = 0; i < testFen.size(); ++i) {
-        float prediction = net.evaluate(testFen[i]);
-        cout << "Fen: " << testFen[i] << endl;
+    for (int i = 0; i < TEST_POSITIONS.size(); ++i) {
+        float prediction = net.evaluate(TEST_POSITIONS[i]);
+        cout << "Fen: " << TEST_POSITIONS[i] << endl;
         cout << "Prediction: " << prediction << endl;
-        cout << "Target: " << testEval[i] << endl;
+        cout << "Target: " << TEST_POSITIONS_EVAL[i] << endl;
         cout << "--------------------------------------" << endl;
     }
 

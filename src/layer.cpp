@@ -3,25 +3,29 @@
 /*
  * ACTIVATION
  */
-float activate(float _x, ActivationType _type) {
-    switch (_type) {
+float activate(float x, ActivationType type) {
+    switch (type) {
         case SIGMOID:
-            return 1.0f / (1.0f + exp(-_x));
+            return 1.0f / (1.0f + exp(-x));
+        case LEAKY_RELU:
+            return (x > 0) ? x : 0.01f * x;
         case RELU:
-            return (_x > 0) ? _x : 0;
+            return (x > 0) ? x : 0;
         default:
-            return 0;
+            return x;
     }
 }
 
-float activateDer(float _x, ActivationType _type) {
-    switch (_type) {
+float activateDer(float x, ActivationType type) {
+    switch (type) {
         case SIGMOID:
-            return activate(_x, SIGMOID) * (1.0f - activate(_x, SIGMOID));
+            return activate(x, SIGMOID) * (1.0f - activate(x, SIGMOID));
+        case LEAKY_RELU:
+            return (x > 0) ? 1.0f : 0.01f;
         case RELU:
-            return (_x > 0) ? 1.0f : 0;
+            return (x > 0) ? 1.0f : 0;
         default:
-            return 0;
+            return x;
     }
 }
 
@@ -29,7 +33,7 @@ float activateDer(float _x, ActivationType _type) {
  * LAYER CLASS
  */
 Layer::Layer(int numPrevNeurons, int numNeurons, ActivationType activationType) :
-        numPrevNeurons(numPrevNeurons), numNeurons(numNeurons), activationType(activationType) {
+numPrevNeurons(numPrevNeurons), numNeurons(numNeurons), activationType(activationType) {
     neurons = new Neuron *[numNeurons];
     weightedInputs = new float[numNeurons];
     activations = new float[numNeurons];

@@ -1,12 +1,11 @@
 #include "network.h"
 
 Network::Network(bool loadWeights) {
-    numLayers = 3;
+    numLayers = 2;
     layers = new Layer *[numLayers];
 
     layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
-    layers[1] = new Layer(HIDDEN_NEURONS1, HIDDEN_NEURONS2, RELU);
-    layers[2] = new Layer(HIDDEN_NEURONS2, OUTPUT_NEURONS, SIGMOID);
+    layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
 
     if (loadWeights) {
         load();
@@ -17,15 +16,12 @@ Network::~Network() {
     for (int i = 0; i < numLayers; ++i) {
         delete layers[i];
     }
+
     delete[] layers;
 }
 
 float Network::feedForward(SparseInput &sparseInput) {
-    float input[12 * 64];
-
-    for(int i = 0; i < 12 * 64; ++i) {
-        input[i] = sparseInput.get(i);
-    }
+    float* input = sparseInput.input.data();
 
     for (int i = 0; i < numLayers; ++i) {
         float *layerOutput = layers[i]->feedForward(input);
@@ -51,13 +47,7 @@ void Network::feedBackward(float target) {
 }
 
 float Network::evaluate(string &fen) {
-    SparseInput sparseInput = fenToInput(fen);
-
-    float input[12 * 64];
-
-    for(int i = 0; i < 12 * 64; ++i) {
-        input[i] = sparseInput.get(i);
-    }
+    float* input = fenToInput(fen).input.data();
 
     for (int i = 0; i < numLayers; ++i) {
         float *layerOutput = layers[i]->feedForward(input);

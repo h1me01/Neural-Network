@@ -29,7 +29,7 @@ Neuron::~Neuron() {
 }
 
 float Neuron::dotProduct(const float *input) {
-    float total;
+    float total = 0;
 
     __m256 num1, num2, num3, num4;
     num4 = _mm256_setzero_ps();
