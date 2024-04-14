@@ -52,7 +52,7 @@ public:
 
 private:
     int numWeights;
-    float beta1 = 0.9f;
+    float beta1 = 0.95f;
     float beta2 = 0.999f;
     float epsilon = 1e-8f;
     float *m_weights;

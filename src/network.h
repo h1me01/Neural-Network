@@ -3,7 +3,7 @@
 
 #include "layer.h"
 
-const string WEIGHTS_PATH = "C:/Users/burio/Downloads/astra_weights_4-12-24.nnue";
+const string WEIGHTS_PATH = "C:/Users/semio/Downloads/astra_weights_4-12-24.nnue";
 
 const int INPUT_NEURONS = 12 * 64;
 const int HIDDEN_NEURONS1 = 64;
@@ -30,11 +30,11 @@ private:
     Layer **layers;
     int numLayers;
 
-    float cost(const vector<SparseInput> &data);
+    float getLoss(const vector<SparseInput> &data);
 
 };
 
-inline float Network::cost(const vector<SparseInput> &data) {
+inline float Network::getLoss(const vector<SparseInput> &data) {
     float totalCost = 0;
 
     for (auto d: data) {

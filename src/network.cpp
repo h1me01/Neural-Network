@@ -127,7 +127,7 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
     auto startTime = chrono::high_resolution_clock::now();
     const int numBatches = (trainingSize + batchSize - 1) / batchSize;
 
-    cout << left << setw(6) << "Epoch" << setw(4) << "|" << "Validation Cost" << endl;
+    cout << left << setw(6) << "Epoch" << setw(4) << "|" << "Validation Loss" << endl;
     cout << "--------------------------------------" << endl;
 
     for (int epoch = 1; epoch <= epochs; ++epoch) {
@@ -150,8 +150,8 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
         }
 
         if (epoch % 2 == 0) {
-            float validationCost = cost(valData);
-            cout << setw(6) << epoch << setw(4) << "|" << validationCost << endl;
+            float validationLoss = getLoss(valData);
+            cout << setw(6) << epoch << setw(4) << "|" << validationLoss << endl;
         }
     }
 

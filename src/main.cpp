@@ -1,6 +1,6 @@
 #include "network.h"
 
-const string DATA_PATH = "C:/Users/burio/Downloads/data.bin";
+const string DATA_PATH = "C:/Users/semio/Downloads/data.bin";
 
 const int EPOCHS = 10;
 const int BATCH_SIZE = 32;

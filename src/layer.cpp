@@ -50,6 +50,7 @@ Layer::~Layer() {
     for (int i = 0; i < numNeurons; ++i) {
         delete neurons[i];
     }
+
     delete[] neurons;
     delete[] weightedInputs;
     delete[] activations;
@@ -63,6 +64,7 @@ float *Layer::feedForward(float *currentInput) {
         weightedInputs[i] = neurons[i]->dotProduct(input);
         activations[i] = activate(weightedInputs[i], activationType);
     }
+
     return activations;
 }
 
@@ -72,15 +74,18 @@ float Layer::calcOutputDelta(float target) {
 
 float *Layer::calcHiddenDeltas(Layer *prevLayer, float *prevDeltas) {
     float *deltas = new float[numNeurons];
+
     for (int i = 0; i < numNeurons; ++i) {
         float delta = 0;
         for (int j = 0; j < prevLayer->numNeurons; ++j) {
             float prevLayerWeight = prevLayer->neurons[j]->getWeights()[i];
             delta += prevLayerWeight * prevDeltas[j];
         }
+
         delta *= activateDer(weightedInputs[i], activationType);
         deltas[i] = delta;
     }
+
     return deltas;
 }
 
