@@ -24,8 +24,7 @@ float Network::feedForward(SparseInput sparseInput) {
     float* input = sparseInput.input.data();
 
     for (int i = 0; i < numLayers; ++i) {
-        float *layerOutput = layers[i]->feedForward(input);
-        copy_n(layerOutput, layers[i]->getNumNeurons(), input);
+        input = layers[i]->feedForward(input);
     }
 
     return input[0];
@@ -47,8 +46,7 @@ float Network::evaluate(string &fen) {
     float* input = fenToInput(fen).input.data();
 
     for (int i = 0; i < numLayers; ++i) {
-        float *layerOutput = layers[i]->feedForward(input);
-        copy_n(layerOutput, layers[i]->getNumNeurons(), input);
+        input = layers[i]->feedForward(input);
     }
 
     return input[0] * 250 - 125;
@@ -135,10 +133,8 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
             int endIdx = min((batch + 1) * batchSize, trainingSize);
 
             for(int i = startIdx; i < endIdx; ++i) {
-                SparseInput& d = data[i];
-
-                feedForward(d);
-                feedBackward(d.target);
+                feedForward(data[i]);
+                feedBackward(data[i].target);
             }
 
             for (int i = 0; i < numLayers; ++i) {
