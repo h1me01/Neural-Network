@@ -20,7 +20,7 @@ Network::~Network() {
     delete[] layers;
 }
 
-float Network::feedForward(SparseInput &sparseInput) {
+float Network::feedForward(SparseInput sparseInput) {
     float* input = sparseInput.input.data();
 
     for (int i = 0; i < numLayers; ++i) {
@@ -133,9 +133,10 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
             int endIdx = min((batch + 1) * batchSize, trainingSize);
-            vector<SparseInput> minibatch(data.begin() + startIdx, data.begin() + endIdx);
 
-            for (auto &d: minibatch) {
+            for(int i = startIdx; i < endIdx; ++i) {
+                SparseInput& d = data[i];
+
                 feedForward(d);
                 feedBackward(d.target);
             }
@@ -152,6 +153,7 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
         }
     }
 
+    // save weights
     save();
 
     auto endTime = chrono::high_resolution_clock::now();

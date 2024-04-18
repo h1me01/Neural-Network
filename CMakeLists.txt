@@ -17,4 +17,6 @@ add_executable(Astra_NNetwork
         src/network.cpp
         src/dataset.h
         src/dataset.cpp
+        src/linkedList.h
+        src/linkedList.cpp
 )

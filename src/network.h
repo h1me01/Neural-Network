@@ -16,7 +16,7 @@ public:
     explicit Network(bool loadWeights = false);
     ~Network();
 
-    float feedForward(SparseInput &sparseInput);
+    float feedForward(SparseInput sparseInput);
     void feedBackward(float target);
 
     float evaluate(string &fen);

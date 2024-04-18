@@ -62,8 +62,9 @@ vector<SparseInput> getSparseData(const string &filePath, int dataSize) {
     }
 
     NetInput netInput;
+
     while (sparseData.size() < dataSize && file.read(reinterpret_cast<char *>(&netInput), sizeof(NetInput))) {
-        sparseData.push_back(getSparseInput(netInput));
+        sparseData.push_back(SparseInput(getSparseInput(netInput)));
     }
 
     return sparseData;

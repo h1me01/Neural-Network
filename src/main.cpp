@@ -24,8 +24,8 @@ int main() {
     vector<SparseInput> DATA = getSparseData(DATA_PATH, 1000);
 
     vector<float> targets;
-    for (auto &d: DATA) {
-        targets.push_back(d.target);
+    for (int i = 0; i < DATA.size(); ++i) {
+        targets.push_back(DATA[i].target);
     }
 
     vector<float> targetsNormalized = normalizeTargets(targets);
