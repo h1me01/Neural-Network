@@ -112,6 +112,8 @@ void Network::load() {
 }
 
 void Network::train(vector<SparseInput> &data, const int epochs, const int batchSize) {
+    shuffleData(data);
+
     int dataSize = data.size();
     int valSize = dataSize / 100;
     int trainingSize = dataSize - valSize;
@@ -128,8 +130,6 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
     cout << "--------------------------------------" << endl;
 
     for (int epoch = 1; epoch <= epochs; ++epoch) {
-        shuffleData(data);
-
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
             int endIdx = min((batch + 1) * batchSize, trainingSize);
