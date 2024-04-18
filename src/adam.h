@@ -23,7 +23,7 @@ public:
         delete[] v_weights;
     }
 
-    void updateWeights(float lr, float *weights, const float *gradients) {
+    void updateWeights(float lr, float *weights, float *gradients) {
         __m256 lr_avx = _mm256_set1_ps(lr);
 
         for (int i = 0; i < numWeights; i += 8) {

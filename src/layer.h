@@ -22,15 +22,16 @@ float activateDer(float x, ActivationType type);
 class Layer {
 public:
     Layer(int numPrevNeurons, int numNeurons, ActivationType activationType);
+
     ~Layer();
 
     float *feedForward(float *currentInput);
 
-    float calcOutputDelta(float target);
-    float *calcHiddenDeltas(Layer *prevLayer, float *prevDeltas);
+    void calcOutputDelta(float target);
+    void calcHiddenDeltas(Layer *prevLayer);
 
     void updateNeurons(float lr);
-    void updateGradients(float *deltas);
+    void updateGradients();
 
     void clearAllGradients();
 
@@ -53,8 +54,8 @@ private:
     Neuron **neurons;
     float *weightedInputs;
     float *activations;
+    float *deltas;
     float *input;
-
 };
 
 #endif //ASTRA_NNETWORK_LAYER_H

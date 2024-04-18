@@ -37,6 +37,7 @@ numPrevNeurons(numPrevNeurons), numNeurons(numNeurons), activationType(activatio
     neurons = new Neuron *[numNeurons];
     weightedInputs = new float[numNeurons];
     activations = new float[numNeurons];
+    deltas = new float[numNeurons];
     input = new float[numPrevNeurons];
 
     for (int i = 0; i < numNeurons; ++i) {
@@ -54,6 +55,7 @@ Layer::~Layer() {
     delete[] neurons;
     delete[] weightedInputs;
     delete[] activations;
+    delete[] deltas;
     delete[] input;
 }
 
@@ -68,25 +70,21 @@ float *Layer::feedForward(float *currentInput) {
     return activations;
 }
 
-float Layer::calcOutputDelta(float target) {
-    return 2 * (activations[0] - target) * activateDer(weightedInputs[0], SIGMOID);
+void Layer::calcOutputDelta(float target) {
+    deltas[0] =  2 * (activations[0] - target) * activateDer(weightedInputs[0], SIGMOID);
 }
 
-float *Layer::calcHiddenDeltas(Layer *prevLayer, float *prevDeltas) {
-    float *deltas = new float[numNeurons];
-
+void Layer::calcHiddenDeltas(Layer *prevLayer) {
     for (int i = 0; i < numNeurons; ++i) {
         float delta = 0;
         for (int j = 0; j < prevLayer->numNeurons; ++j) {
             float prevLayerWeight = prevLayer->neurons[j]->getWeights()[i];
-            delta += prevLayerWeight * prevDeltas[j];
+            delta += prevLayerWeight * prevLayer->deltas[j];
         }
 
         delta *= activateDer(weightedInputs[i], activationType);
         deltas[i] = delta;
     }
-
-    return deltas;
 }
 
 void Layer::updateNeurons(float lr) {
@@ -95,7 +93,7 @@ void Layer::updateNeurons(float lr) {
     }
 }
 
-void Layer::updateGradients(float *deltas) {
+void Layer::updateGradients() {
     for (int i = 0; i < numNeurons; ++i) {
         __m256 delta_avx = _mm256_set1_ps(deltas[i]);
 

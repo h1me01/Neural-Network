@@ -33,16 +33,13 @@ float Network::feedForward(SparseInput &sparseInput) {
 
 void Network::feedBackward(float target) {
     // Update output layer
-    float outputDelta = layers[numLayers - 1]->calcOutputDelta(target);
-    vector<float> deltas = {outputDelta};
-    layers[numLayers - 1]->updateGradients(deltas.data());
+    layers[numLayers - 1]->calcOutputDelta(target);
+    layers[numLayers - 1]->updateGradients();
 
     // Update hidden layer(s)
     for (int i = numLayers - 2; i >= 0; --i) {
-        float *currentDeltas = layers[i]->calcHiddenDeltas(layers[i + 1], deltas.data());
-        deltas.resize(layers[i]->getNumNeurons());
-        copy_n(currentDeltas, layers[i]->getNumNeurons(), deltas.begin());
-        layers[i]->updateGradients(deltas.data());
+        layers[i]->calcHiddenDeltas(layers[i + 1]);
+        layers[i]->updateGradients();
     }
 }
 
