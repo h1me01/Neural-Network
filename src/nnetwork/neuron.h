@@ -13,7 +13,7 @@ float heInit(int numPrevNeurons);
  */
 class Neuron {
 public:
-    explicit Neuron(int numPrevNeurons);
+    Neuron(int numPrevNeurons);
 
     ~Neuron();
 
@@ -54,7 +54,9 @@ public:
 
 private:
     Adam adam;
+
     int numWeights;
+
     float *gradientWeights;
     float gradientBias;
     float *weights;

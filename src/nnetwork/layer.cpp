@@ -1,35 +1,6 @@
 #include "layer.h"
 
 /*
- * ACTIVATION
- */
-float activate(float x, ActivationType type) {
-    switch (type) {
-        case SIGMOID:
-            return 1.0f / (1.0f + exp(-x));
-        case LEAKY_RELU:
-            return (x > 0) ? x : 0.01f * x;
-        case RELU:
-            return (x > 0) ? x : 0;
-        default:
-            return x;
-    }
-}
-
-float activateDer(float x, ActivationType type) {
-    switch (type) {
-        case SIGMOID:
-            return activate(x, SIGMOID) * (1.0f - activate(x, SIGMOID));
-        case LEAKY_RELU:
-            return (x > 0) ? 1.0f : 0.01f;
-        case RELU:
-            return (x > 0) ? 1.0f : 0;
-        default:
-            return x;
-    }
-}
-
-/*
  * LAYER CLASS
  */
 Layer::Layer(int numPrevNeurons, int numNeurons, ActivationType activationType) :

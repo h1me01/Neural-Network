@@ -19,4 +19,6 @@ add_executable(Astra_NNetwork
         src/nnetwork/layer.cpp
         src/nnetwork/network.h
         src/nnetwork/network.cpp
+        src/nnetwork/activation.cpp
+        src/nnetwork/activation.h
 )

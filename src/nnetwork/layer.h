@@ -1,20 +1,8 @@
 #ifndef ASTRA_NNETWORK_LAYER_H
 #define ASTRA_NNETWORK_LAYER_H
 
+#include "activation.h"
 #include "neuron.h"
-
-/*
- * ACTIVATION FUNCTIONS
- */
-enum ActivationType {
-    NONE,
-    SIGMOID,
-    LEAKY_RELU,
-    RELU
-};
-
-float activate(float x, ActivationType type);
-float activateDer(float x, ActivationType type);
 
 /*
  * LAYER CLASS
@@ -49,9 +37,12 @@ public:
 
 private:
     ActivationType activationType;
+
     int numPrevNeurons;
     int numNeurons;
+
     Neuron **neurons;
+
     float *weightedInputs;
     float *activations;
     float *deltas;
