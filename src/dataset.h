@@ -5,12 +5,14 @@
 #include <fstream>
 #include <chrono>
 #include <vector>
-#include <array>
 #include <cmath>
 #include <algorithm>
+#include <unordered_map>
 #include <immintrin.h>
 #include <cassert>
 #include "misc.h"
+
+#define NUM_FEATURES 12 * 64
 
 enum Color : int {
     WHITE, BLACK, NUM_COLORS = 2
@@ -27,19 +29,14 @@ struct NetInput {
 };
 
 struct SparseInput {
-    array<float, 12 * 64> input;
+    float input[NUM_FEATURES]{};
     float target;
 
-    SparseInput() : input{}, target(0) {}
+    SparseInput() : target(0) {}
 
     void set(int idx) {
-        assert(idx >= 0 && idx < (12 * 64));
-        input[idx] = true;
-    }
-
-    float get(int idx) {
-        assert(idx >= 0 && idx < (12 * 64));
-        return input[idx];
+        assert(idx >= 0 && idx < NUM_FEATURES);
+        input[idx] = 1;
     }
 };
 

@@ -5,7 +5,7 @@
 
 const string WEIGHTS_PATH = "C:/Users/semio/Downloads/astra_weights_4-12-24.nnue";
 
-const int INPUT_NEURONS = 12 * 64;
+const int INPUT_NEURONS = NUM_FEATURES;
 const int HIDDEN_NEURONS1 = 64;
 const int OUTPUT_NEURONS = 1;
 
@@ -27,8 +27,9 @@ public:
     void train(vector<SparseInput> &data, int epochs, int batchSize);
 
 private:
-    Layer **layers;
     int numLayers;
+
+    Layer **layers;
 
     float getLoss(const vector<SparseInput> &data);
 

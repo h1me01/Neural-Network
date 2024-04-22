@@ -2,8 +2,8 @@
 
 Network::Network(bool loadWeights) {
     numLayers = 2;
-    layers = new Layer *[numLayers];
 
+    layers = new Layer *[numLayers];
     layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
     layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
 
@@ -21,7 +21,7 @@ Network::~Network() {
 }
 
 float Network::feedForward(SparseInput sparseInput) {
-    float* input = sparseInput.input.data();
+    float* input = sparseInput.input;
 
     for (int i = 0; i < numLayers; ++i) {
         input = layers[i]->feedForward(input);
@@ -43,20 +43,20 @@ void Network::feedBackward(float target) {
 }
 
 float Network::evaluate(string &fen) {
-    float* input = fenToInput(fen).input.data();
+    float* input = fenToInput(fen).input;
 
     for (int i = 0; i < numLayers; ++i) {
         input = layers[i]->feedForward(input);
     }
 
-    return input[0] * 250 - 125;
+    return 0 * 250 - 125;
 }
 
 void Network::save() {
-    std::ofstream file(WEIGHTS_PATH, std::ios::binary);
+    ofstream file(WEIGHTS_PATH, ios::binary);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file for writing: " << WEIGHTS_PATH << std::endl;
+        cerr << "Error opening file for writing: " << WEIGHTS_PATH << endl;
         return;
     }
 
@@ -80,10 +80,10 @@ void Network::save() {
 }
 
 void Network::load() {
-    std::ifstream file(WEIGHTS_PATH, std::ios::binary);
+    ifstream file(WEIGHTS_PATH, ios::binary);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file for reading: " << WEIGHTS_PATH << std::endl;
+        cerr << "Error opening file for reading: " << WEIGHTS_PATH << endl;
         return;
     }
 

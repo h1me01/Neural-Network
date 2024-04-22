@@ -6,8 +6,8 @@
 using namespace std;
 
 namespace Tools {
-    inline random_device rd;
-    inline mt19937 gen(42);
+    extern random_device rd;
+    extern mt19937 gen;
 } // namespace Tools
 
 const int DEBRUIJN64[64] = {
@@ -25,11 +25,7 @@ constexpr int bsf(uint64_t b) {
     return DEBRUIJN64[0x03f79d71b4cb0a89 * (b ^ (b - 1)) >> 58];
 }
 
-inline int popLsb(uint64_t &b) {
-    int lsb = bsf(b);
-    b &= b - 1;
-    return lsb;
-}
+int popLsb(uint64_t &b);
 
 
 #endif //ASTRA_NNETWORK_MISC_H

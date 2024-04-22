@@ -1,4 +1,4 @@
-#include "network.h"
+#include "nnetwork/network.h"
 
 const string DATA_PATH = "C:/Users/semio/Downloads/data.bin";
 
@@ -19,9 +19,10 @@ vector<float> TEST_POSITIONS_EVAL = {
         114, 0, 0.2f, -5.5f, 4.1f, 122, -122
 };
 
+
 int main() {
     // LOAD AND NORMALIZE DATA
-    vector<SparseInput> DATA = getSparseData(DATA_PATH, 1000);
+    vector<SparseInput> DATA = getSparseData(DATA_PATH, 10000);
 
     vector<float> targets;
     for (int i = 0; i < DATA.size(); ++i) {

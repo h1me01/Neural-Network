@@ -34,8 +34,8 @@ int index(int psq, int pt, Color pc, Color view) {
 }
 
 SparseInput getSparseInput(NetInput &netInput) {
-    SparseInput input;
-    input.target = netInput.target;
+    SparseInput sparseInput;
+    sparseInput.target = netInput.target;
 
     for (int i = 0; i < NUM_COLORS; ++i) {
         for (int j = 0; j < 6; ++j) {
@@ -44,12 +44,12 @@ SparseInput getSparseInput(NetInput &netInput) {
                 int sq = popLsb(piece);
                 int idx = index(sq, j, (Color) i, netInput.stm);
 
-                input.set(idx);
+                sparseInput.set(idx);
             }
         }
     }
 
-    return input;
+    return sparseInput;
 }
 
 vector<SparseInput> getSparseData(const string &filePath, int dataSize) {
@@ -64,7 +64,7 @@ vector<SparseInput> getSparseData(const string &filePath, int dataSize) {
     NetInput netInput;
 
     while (sparseData.size() < dataSize && file.read(reinterpret_cast<char *>(&netInput), sizeof(NetInput))) {
-        sparseData.push_back(SparseInput(getSparseInput(netInput)));
+        sparseData.push_back(getSparseInput(netInput));
     }
 
     return sparseData;
