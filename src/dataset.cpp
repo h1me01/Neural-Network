@@ -1,6 +1,6 @@
 #include "dataset.h"
 
-void shuffleData(vector<SparseInput> &data) {
+void shuffleData(vector<NetInput> &data) {
     uniform_int_distribution<int> dist;
     for (int i = data.size() - 1; i > 0; --i) {
         swap(data[i], data[dist(Tools::gen, decltype(dist)::param_type{0, i})]);
@@ -33,9 +33,8 @@ int index(int psq, int pt, Color pc, Color view) {
     return psq + 64 * pt + (pc != view) * 64 * 6;
 }
 
-SparseInput getSparseInput(NetInput &netInput) {
-    SparseInput sparseInput;
-    sparseInput.target = netInput.target;
+float *getSparseInput(NetInput &netInput) {
+    float *sparseInput = new float[NUM_FEATURES]{};
 
     for (int i = 0; i < NUM_COLORS; ++i) {
         for (int j = 0; j < 6; ++j) {
@@ -44,7 +43,7 @@ SparseInput getSparseInput(NetInput &netInput) {
                 int sq = popLsb(piece);
                 int idx = index(sq, j, (Color) i, netInput.stm);
 
-                sparseInput.set(idx);
+                sparseInput[idx] = 1.0f;
             }
         }
     }
@@ -52,8 +51,8 @@ SparseInput getSparseInput(NetInput &netInput) {
     return sparseInput;
 }
 
-vector<SparseInput> getSparseData(const string &filePath, int dataSize) {
-    vector<SparseInput> sparseData;
+vector<NetInput> getSparseData(const string &filePath, int dataSize) {
+    vector<NetInput> sparseData;
     ifstream file(filePath, ios::binary);
 
     if (!file) {
@@ -62,16 +61,15 @@ vector<SparseInput> getSparseData(const string &filePath, int dataSize) {
     }
 
     NetInput netInput;
-
     while (sparseData.size() < dataSize && file.read(reinterpret_cast<char *>(&netInput), sizeof(NetInput))) {
-        sparseData.push_back(getSparseInput(netInput));
+        sparseData.push_back(netInput);
     }
 
     return sparseData;
 }
 
-SparseInput fenToInput(string &fen) {
-    SparseInput input;
+vector<float> fenToInput(string &fen) {
+    vector<float> input(NUM_FEATURES, 0);
     Color stm = fen.find('w') != string::npos ? WHITE : BLACK;
 
     int rank = 7, file = -1;
@@ -87,7 +85,7 @@ SparseInput fenToInput(string &fen) {
             int sq = 8 * rank + file;
             int idx = index(sq, c, stm);
 
-            input.set(idx);
+            input[idx] = 1;
         }
     }
 

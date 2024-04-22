@@ -16,7 +16,7 @@ public:
     Network(bool loadWeights = false);
     ~Network();
 
-    float feedForward(SparseInput sparseInput);
+    float feedForward(NetInput& netInput);
     void feedBackward(float target);
 
     float evaluate(string &fen);
@@ -24,18 +24,18 @@ public:
     void save();
     void load();
 
-    void train(vector<SparseInput> &data, int epochs, int batchSize);
+    void train(vector<NetInput> &data, int epochs, int batchSize);
 
 private:
     int numLayers;
 
     Layer **layers;
 
-    float getLoss(const vector<SparseInput> &data);
+    float getLoss(const vector<NetInput> &data);
 
 };
 
-inline float Network::getLoss(const vector<SparseInput> &data) {
+inline float Network::getLoss(const vector<NetInput> &data) {
     float totalCost = 0;
 
     for (auto d: data) {

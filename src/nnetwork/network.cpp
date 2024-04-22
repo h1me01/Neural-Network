@@ -20,8 +20,8 @@ Network::~Network() {
     delete[] layers;
 }
 
-float Network::feedForward(SparseInput sparseInput) {
-    float* input = sparseInput.input;
+float Network::feedForward(NetInput& netInput) {
+    float* input = getSparseInput(netInput);
 
     for (int i = 0; i < numLayers; ++i) {
         input = layers[i]->feedForward(input);
@@ -43,7 +43,7 @@ void Network::feedBackward(float target) {
 }
 
 float Network::evaluate(string &fen) {
-    float* input = fenToInput(fen).input;
+    float* input = fenToInput(fen).data();
 
     for (int i = 0; i < numLayers; ++i) {
         input = layers[i]->feedForward(input);
@@ -109,7 +109,7 @@ void Network::load() {
     file.close();
 }
 
-void Network::train(vector<SparseInput> &data, const int epochs, const int batchSize) {
+void Network::train(vector<NetInput> &data, const int epochs, const int batchSize) {
     shuffleData(data);
 
     int dataSize = data.size();
@@ -118,7 +118,7 @@ void Network::train(vector<SparseInput> &data, const int epochs, const int batch
 
     cout << "\nTraining Network with " << dataSize << " Positions\n" << endl;
 
-    vector<SparseInput> valData(data.begin() + trainingSize, data.end());
+    vector<NetInput> valData(data.begin() + trainingSize, data.end());
     data.resize(trainingSize);
 
     auto startTime = chrono::high_resolution_clock::now();

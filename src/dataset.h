@@ -28,19 +28,7 @@ struct NetInput {
     }
 };
 
-struct SparseInput {
-    float input[NUM_FEATURES]{};
-    float target;
-
-    SparseInput() : target(0) {}
-
-    void set(int idx) {
-        assert(idx >= 0 && idx < NUM_FEATURES);
-        input[idx] = 1;
-    }
-};
-
-void shuffleData(vector<SparseInput> &data);
+void shuffleData(vector<NetInput> &data);
 
 int pieceIndex(char c);
 
@@ -49,11 +37,11 @@ int mirrorVertically(int sq);
 int index(int psq, char p, Color view);
 int index(int psq, int pt, Color pc, Color view);
 
-SparseInput getSparseInput(NetInput &netInput);
+vector<NetInput> getSparseData(const string &filePath, int dataSize = INT_MAX);
 
-vector<SparseInput> getSparseData(const string &filePath, int dataSize = INT_MAX);
+float* getSparseInput(NetInput &netInput);
 
-SparseInput fenToInput(string &fen);
+vector<float> fenToInput(string &fen);
 
 vector<float> normalizeTargets(vector<float> &targetValues);
 
