@@ -21,4 +21,5 @@ float sigmoidDer(float x);
 float activate(float x, ActivationType type);
 float activateDer(float x, ActivationType type);
 
+
 #endif //ASTRA_NNETWORK_ACTIVATION_H

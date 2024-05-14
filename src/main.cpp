@@ -22,7 +22,7 @@ vector<float> TEST_POSITIONS_EVAL = {
 
 int main() {
     // LOAD AND NORMALIZE DATA
-    vector<NetInput> DATA = getSparseData(DATA_PATH, INT_MAX);
+    vector<NetInput> DATA = getSparseData(DATA_PATH, /*5'242'880*/1000000);
 
     vector<float> targets;
     for (int i = 0; i < DATA.size(); ++i) {

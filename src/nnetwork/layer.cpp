@@ -13,8 +13,6 @@ numPrevNeurons(numPrevNeurons), numNeurons(numNeurons), activationType(activatio
 
     for (int i = 0; i < numNeurons; ++i) {
         neurons[i] = new Neuron(numPrevNeurons);
-        weightedInputs[i] = 0;
-        activations[i] = 0;
     }
 }
 

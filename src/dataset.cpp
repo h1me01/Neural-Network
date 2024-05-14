@@ -34,7 +34,7 @@ int index(int psq, int pt, Color pc, Color view) {
 }
 
 float *getSparseInput(NetInput &netInput) {
-    float *sparseInput = new float[NUM_FEATURES]{};
+    auto *sparseInput = new float[NUM_FEATURES]{};
 
     for (int i = 0; i < NUM_COLORS; ++i) {
         for (int j = 0; j < 6; ++j) {

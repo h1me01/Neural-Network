@@ -13,7 +13,7 @@ const float LEARNING_RATE = 0.001f;
 
 class Network {
 public:
-    Network(bool loadWeights = false);
+    explicit Network(bool loadWeights = false);
     ~Network();
 
     float feedForward(NetInput& netInput);

@@ -12,7 +12,7 @@
 #include <cassert>
 #include "misc.h"
 
-#define NUM_FEATURES 12 * 64
+#define NUM_FEATURES (12 * 64)
 
 enum Color : int {
     WHITE, BLACK, NUM_COLORS = 2
