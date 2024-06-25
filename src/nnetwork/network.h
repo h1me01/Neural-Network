@@ -3,7 +3,7 @@
 
 #include "layer.h"
 
-const string WEIGHTS_PATH = "C:/Users/semio/Downloads/astra_weights_4-12-24.nnue";
+const string WEIGHTS_PATH = "C:/Users/semio/Downloads/astra_weights_768-64-1.nnue";
 
 const int INPUT_NEURONS = NUM_FEATURES;
 const int HIDDEN_NEURONS1 = 64;
