@@ -16,13 +16,13 @@ public:
     explicit Network(bool loadWeights = false);
     ~Network();
 
-    float feedForward(NetInput& netInput);
-    void feedBackward(float target);
+    float feedForward(NetInput& netInput) const;
+    void feedBackward(float target) const;
 
-    float evaluate(string &fen);
+    float evaluate(string &fen) const;
 
-    void save();
-    void load();
+    void saveWeights() const;
+    void loadWeights() const;
 
     void train(vector<NetInput> &data, int epochs, int batchSize);
 
@@ -35,6 +35,23 @@ private:
 
 };
 
+inline Network::Network(bool loadWeights) {
+    numLayers = 2;
+
+    layers = new Layer *[numLayers];
+    layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
+    layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
+
+    if (loadWeights) loadWeights();
+}
+
+inline Network::~Network() {
+    for (int i = 0; i < numLayers; ++i)
+        delete layers[i];
+
+    delete[] layers;
+}
+
 inline float Network::getLoss(const vector<NetInput> &data) {
     float totalCost = 0;
 
@@ -46,6 +63,5 @@ inline float Network::getLoss(const vector<NetInput> &data) {
 
     return totalCost / data.size();
 }
-
 
 #endif //ASTRA_NNETWORK_NETWORK_H

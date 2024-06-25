@@ -6,10 +6,7 @@
 #include <chrono>
 #include <vector>
 #include <cmath>
-#include <algorithm>
-#include <unordered_map>
 #include <immintrin.h>
-#include <cassert>
 #include "misc.h"
 
 #define NUM_FEATURES (12 * 64)
@@ -30,19 +27,12 @@ struct NetInput {
 
 void shuffleData(vector<NetInput> &data);
 
-int pieceIndex(char c);
-
-int mirrorVertically(int sq);
-
-int index(int psq, char p, Color view);
-int index(int psq, int pt, Color pc, Color view);
-
-vector<NetInput> getSparseData(const string &filePath, int dataSize = INT_MAX);
+vector<NetInput> getNetData(const string &filePath, int dataSize = INT_MAX);
 
 float* getSparseInput(NetInput &netInput);
 
 vector<float> fenToInput(string &fen);
 
-vector<float> normalizeTargets(vector<float> &targetValues);
+vector<float> normalizeTargets(vector<float> &targetValues, float minValue = -125, float maxValue = 125);
 
 #endif //ASTRA_NNETWORK_DATASET_H

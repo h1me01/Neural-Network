@@ -10,16 +10,42 @@ enum ActivationType {
     SIGMOID
 };
 
-float relu(float x);
-float leakyRelu(float x);
-float sigmoid(float x);
+inline float relu(float x) { return x > 0 ? x : 0; }
+inline float leakyRelu(float x) { return x > 0 ? x : 0.01f * x; }
+inline float sigmoid(float x) { return 1 / (1 + exp(-x)); }
 
-float reluDer(float x);
-float leakyReluDer(float x) ;
-float sigmoidDer(float x);
+inline float reluDer(float x) { return x > 0 ? 1 : 0; }
+inline float leakyReluDer(float x) { return x > 0 ? 1 : 0.01f; }
 
-float activate(float x, ActivationType type);
-float activateDer(float x, ActivationType type);
+inline float sigmoidDer(float x) {
+    float sig = sigmoid(x);
+    return sig * (1 - sig);
+}
 
+inline float activate(float x, ActivationType type) {
+    switch (type) {
+        case RELU:
+            return relu(x);
+        case LEAKY_RELU:
+            return leakyRelu(x);
+        case SIGMOID:
+            return sigmoid(x);
+        default:
+            return x;
+    }
+}
+
+inline float activateDer(float x, ActivationType type) {
+    switch (type) {
+        case RELU:
+            return reluDer(x);
+        case LEAKY_RELU:
+            return leakyReluDer(x);
+        case SIGMOID:
+            return sigmoidDer(x);
+        default:
+            return 1;
+    }
+}
 
 #endif //ASTRA_NNETWORK_ACTIVATION_H

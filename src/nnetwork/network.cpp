@@ -1,36 +1,14 @@
 #include "network.h"
 
-Network::Network(bool loadWeights) {
-    numLayers = 2;
-
-    layers = new Layer *[numLayers];
-    layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
-    layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
-
-    if (loadWeights) {
-        load();
-    }
-}
-
-Network::~Network() {
-    for (int i = 0; i < numLayers; ++i) {
-        delete layers[i];
-    }
-
-    delete[] layers;
-}
-
-float Network::feedForward(NetInput& netInput) {
+float Network::feedForward(NetInput& netInput) const {
     float* input = getSparseInput(netInput);
-
-    for (int i = 0; i < numLayers; ++i) {
+    for (int i = 0; i < numLayers; ++i)
         input = layers[i]->feedForward(input);
-    }
 
     return input[0];
 }
 
-void Network::feedBackward(float target) {
+void Network::feedBackward(float target) const {
     // Update output layer
     layers[numLayers - 1]->calcOutputDelta(target);
     layers[numLayers - 1]->updateGradients();
@@ -42,17 +20,15 @@ void Network::feedBackward(float target) {
     }
 }
 
-float Network::evaluate(string &fen) {
+float Network::evaluate(string& fen) const {
     float* input = fenToInput(fen).data();
-
-    for (int i = 0; i < numLayers; ++i) {
+    for (int i = 0; i < numLayers; ++i)
         input = layers[i]->feedForward(input);
-    }
 
-    return 0 * 250 - 125;
+    return input[0] * 250 - 125;
 }
 
-void Network::save() {
+void Network::saveWeights() const {
     ofstream file(WEIGHTS_PATH, ios::binary);
 
     if (!file.is_open()) {
@@ -64,22 +40,22 @@ void Network::save() {
         int numPrevNeurons = layers[i]->getNumPrevNeurons();
         int numNeurons = layers[i]->getNumNeurons();
 
-        file.write(reinterpret_cast<char *>(&numPrevNeurons), sizeof(int));
-        file.write(reinterpret_cast<char *>(&numNeurons), sizeof(int));
+        file.write(reinterpret_cast<char*>(&numPrevNeurons), sizeof(int));
+        file.write(reinterpret_cast<char*>(&numNeurons), sizeof(int));
 
         for (int j = 0; j < numNeurons; ++j) {
-            float *weights = layers[i]->getNeurons()[j]->getWeights();
+            float* weights = layers[i]->getNeurons()[j]->getWeights();
             float bias = layers[i]->getNeurons()[j]->getBias();
 
-            file.write(reinterpret_cast<char *>(weights), numPrevNeurons * sizeof(float));
-            file.write(reinterpret_cast<char *>(&bias), sizeof(float));
+            file.write(reinterpret_cast<char*>(weights), numPrevNeurons * sizeof(float));
+            file.write(reinterpret_cast<char*>(&bias), sizeof(float));
         }
     }
 
     file.close();
 }
 
-void Network::load() {
+void Network::loadWeights() const {
     ifstream file(WEIGHTS_PATH, ios::binary);
 
     if (!file.is_open()) {
@@ -91,15 +67,15 @@ void Network::load() {
         int numPrevNeurons;
         int numNeurons;
 
-        file.read(reinterpret_cast<char *>(&numPrevNeurons), sizeof(int));
-        file.read(reinterpret_cast<char *>(&numNeurons), sizeof(int));
+        file.read(reinterpret_cast<char*>(&numPrevNeurons), sizeof(int));
+        file.read(reinterpret_cast<char*>(&numNeurons), sizeof(int));
 
         for (int j = 0; j < numNeurons; ++j) {
-            float *weights = new float[numPrevNeurons];
+            float* weights = new float[numPrevNeurons];
             float bias;
 
-            file.read(reinterpret_cast<char *>(weights), numPrevNeurons * sizeof(float));
-            file.read(reinterpret_cast<char *>(&bias), sizeof(float));
+            file.read(reinterpret_cast<char*>(weights), numPrevNeurons * sizeof(float));
+            file.read(reinterpret_cast<char*>(&bias), sizeof(float));
 
             layers[i]->getNeurons()[j]->setWeights(weights);
             layers[i]->getNeurons()[j]->setBias(bias);
@@ -109,7 +85,7 @@ void Network::load() {
     file.close();
 }
 
-void Network::train(vector<NetInput> &data, const int epochs, const int batchSize) {
+void Network::train(vector<NetInput>& data, const int epochs, const int batchSize) {
     shuffleData(data);
 
     int dataSize = data.size();
@@ -132,7 +108,7 @@ void Network::train(vector<NetInput> &data, const int epochs, const int batchSiz
             int startIdx = batch * batchSize;
             int endIdx = min((batch + 1) * batchSize, trainingSize);
 
-            for(int i = startIdx; i < endIdx; ++i) {
+            for (int i = startIdx; i < endIdx; ++i) {
                 feedForward(data[i]);
                 feedBackward(data[i].target);
             }
@@ -149,8 +125,7 @@ void Network::train(vector<NetInput> &data, const int epochs, const int batchSiz
         }
     }
 
-    // save weights
-    save();
+    saveWeights();
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::seconds>(endTime - startTime);
