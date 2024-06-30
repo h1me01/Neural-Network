@@ -35,14 +35,14 @@ private:
 
 };
 
-inline Network::Network(bool loadWeights) {
+inline Network::Network(bool load) {
     numLayers = 2;
 
     layers = new Layer *[numLayers];
     layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
     layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
 
-    if (loadWeights) loadWeights();
+    if (load) loadWeights();
 }
 
 inline Network::~Network() {

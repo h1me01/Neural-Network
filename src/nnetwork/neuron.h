@@ -34,27 +34,22 @@ public:
     }
 
     float dotProduct(const float *input) {
-        float dot = bias;
-
-        __m256 num1, num2, num3, num4;
-        num4 = _mm256_setzero_ps();
+        __m256 sum = _mm256_setzero_ps();
 
         for (int i = 0; i < numWeights; i += 8) {
-            num1 = _mm256_loadu_ps(input + i);
-            num2 = _mm256_loadu_ps(weights + i);
-            num3 = _mm256_mul_ps(num1, num2);
-            num4 = _mm256_add_ps(num4, num3);
+            __m256 va = _mm256_loadu_ps(input + i);
+            __m256 vb = _mm256_loadu_ps(weights + i);
+            sum = _mm256_add_ps(sum, _mm256_mul_ps(va, vb));
         }
 
-        num4 = _mm256_hadd_ps(num4, num4);
-        num4 = _mm256_hadd_ps(num4, num4);
+        __m256 hsum = _mm256_hadd_ps(sum, sum);
+        hsum = _mm256_hadd_ps(hsum, hsum);
 
-        __m128 lo = _mm256_castps256_ps128(num4);
-        __m128 hi = _mm256_extractf128_ps(num4, 1);
-        lo = _mm_add_ps(lo, hi);
+        __m128 lo = _mm256_castps256_ps128(hsum);
+        __m128 hi = _mm256_extractf128_ps(hsum, 1);
+        __m128 result = _mm_add_ss(lo, hi);
 
-        _mm_store_ss(&dot, lo);
-        return dot;
+        return _mm_cvtss_f32(result) + bias;
     }
 
     void clearGradients() {
@@ -70,24 +65,34 @@ public:
         adam.updateWeights(lr, weights, gradientWeights);
     }
 
-    void updateGradientWeight(int i, float val) const {
-        gradientWeights[i] += val;
-    }
-
     void updateGradientBias(float val) {
         gradientBias += val;
     }
 
-    int getNumWeights() const { return numWeights; }
-    float *getWeights() const { return weights; }
+    [[nodiscard]] int getNumWeights() const {
+        return numWeights;
+    }
+
+    [[nodiscard]] float *getWeights() const {
+        return weights;
+    }
+
+    [[nodiscard]] float *getGradientWeights() const {
+        return gradientWeights;
+    }
 
     void setWeights(float *newWeights) {
         delete[] weights;
         weights = newWeights;
     }
 
-    float getBias() const { return bias; }
-    void setBias(float newBias) { bias = newBias; }
+    [[nodiscard]] float getBias() const {
+        return bias;
+    }
+
+    void setBias(float newBias) {
+        bias = newBias;
+    }
 
 private:
     Adam adam;
@@ -98,7 +103,6 @@ private:
     float gradientBias;
     float *weights;
     float bias;
-
 };
 
 #endif //ASTRA_NNETWORK_NEURON_H

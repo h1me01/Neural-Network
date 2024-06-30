@@ -65,22 +65,13 @@ public:
     void updateGradients() const {
         for (int i = 0; i < numNeurons; ++i) {
             __m256 delta_avx = _mm256_set1_ps(deltas[i]);
+            float *gradientWeights = neurons[i]->getGradientWeights();
 
-            for (int j = 0; j < numPrevNeurons; j += 8) {
+            for (int j = 0; j + 7 < numPrevNeurons; j += 8) {
                 __m256 input_avx = _mm256_loadu_ps(input + j);
-                __m256 inputWeightDer_avx = _mm256_mul_ps(input_avx, delta_avx);
-
-                float elements[8];
-                _mm256_storeu_ps(elements, inputWeightDer_avx);
-
-                neurons[i]->updateGradientWeight(j, elements[0]);
-                neurons[i]->updateGradientWeight(j + 1, elements[1]);
-                neurons[i]->updateGradientWeight(j + 2, elements[2]);
-                neurons[i]->updateGradientWeight(j + 3, elements[3]);
-                neurons[i]->updateGradientWeight(j + 4, elements[4]);
-                neurons[i]->updateGradientWeight(j + 5, elements[5]);
-                neurons[i]->updateGradientWeight(j + 6, elements[6]);
-                neurons[i]->updateGradientWeight(j + 7, elements[7]);
+                __m256 current_grad_avx = _mm256_loadu_ps(gradientWeights + j);
+                __m256 inputWeightDer_avx = _mm256_fmadd_ps(input_avx, delta_avx, current_grad_avx);
+                _mm256_storeu_ps(gradientWeights + j, inputWeightDer_avx);
             }
 
             neurons[i]->updateGradientBias(deltas[i]);
@@ -92,9 +83,17 @@ public:
             neurons[i]->clearGradients();
     }
 
-    Neuron **getNeurons() const { return neurons; }
-    int getNumPrevNeurons() const { return numPrevNeurons; }
-    int getNumNeurons() const { return numNeurons; }
+    [[nodiscard]] Neuron **getNeurons() const {
+        return neurons;
+    }
+
+    [[nodiscard]] int getNumPrevNeurons() const {
+        return numPrevNeurons;
+    }
+
+    [[nodiscard]] int getNumNeurons() const {
+        return numNeurons;
+    }
 
 private:
     ActivationType activationType;

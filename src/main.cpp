@@ -19,9 +19,10 @@ vector<float> TEST_POSITIONS_EVAL = {
     114, 0, 0.2f, -5.5f, 4.1f, 122, -122
 };
 
+
 int main() {
     // LOAD AND NORMALIZE DATA
-    vector<NetInput> DATA = getNetData(DATA_PATH);
+    vector<NetInput> DATA = getNetData(DATA_PATH, 10000);
 
     vector<float> targets;
     for (auto &i: DATA) {
