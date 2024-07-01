@@ -3,8 +3,6 @@
 
 #include "layer.h"
 
-const string WEIGHTS_PATH = "C:/Users/semio/Downloads/astra_weights_768-64-1.nnue";
-
 const int INPUT_NEURONS = NUM_FEATURES;
 const int HIDDEN_NEURONS1 = 64;
 const int OUTPUT_NEURONS = 1;
@@ -13,7 +11,7 @@ const float LEARNING_RATE = 0.001f;
 
 class Network {
 public:
-    explicit Network(bool loadWeights = false);
+    explicit Network(const string &weightsPath = "");
     ~Network();
 
     float feedForward(NetInput& netInput) const;
@@ -21,40 +19,44 @@ public:
 
     float evaluate(string &fen) const;
 
-    void saveWeights() const;
-    void loadWeights() const;
+    void saveWeights(int epoch) const;
+    void loadWeights(const string& weightsPath) const;
 
     void train(vector<NetInput> &data, int epochs, int batchSize);
 
 private:
     int numLayers;
-
     Layer **layers;
 
     float getLoss(const vector<NetInput> &data);
-
 };
 
-inline Network::Network(bool load) {
+inline Network::Network(const string& weightsPath) {
     numLayers = 2;
 
     layers = new Layer *[numLayers];
     layers[0] = new Layer(INPUT_NEURONS, HIDDEN_NEURONS1, RELU);
     layers[1] = new Layer(HIDDEN_NEURONS1, OUTPUT_NEURONS, SIGMOID);
 
-    if (load) loadWeights();
+    if (!weightsPath.empty())
+        loadWeights(weightsPath);
 }
 
 inline Network::~Network() {
     for (int i = 0; i < numLayers; ++i)
         delete layers[i];
-
     delete[] layers;
+}
+
+inline float Network::evaluate(string& fen) const {
+    float* input = fenToInput(fen).data();
+    for (int i = 0; i < numLayers; ++i)
+        input = layers[i]->feedForward(input);
+    return input[0] * 250 - 125;
 }
 
 inline float Network::getLoss(const vector<NetInput> &data) {
     float totalCost = 0;
-
     for (auto d: data) {
         float prediction = feedForward(d);
         float error = prediction - d.target;

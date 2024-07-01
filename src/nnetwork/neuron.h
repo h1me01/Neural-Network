@@ -33,29 +33,23 @@ public:
         delete[] weights;
     }
 
-    float dotProduct(const float *input) {
-        __m256 sum = _mm256_setzero_ps();
+    float dotProduct(const float *input) const {
+        __m512 sum = _mm512_setzero_ps();
 
-        for (int i = 0; i < numWeights; i += 8) {
-            __m256 va = _mm256_loadu_ps(input + i);
-            __m256 vb = _mm256_loadu_ps(weights + i);
-            sum = _mm256_add_ps(sum, _mm256_mul_ps(va, vb));
+        for (int i = 0; i < numWeights; i += 16) {
+            __m512 va = _mm512_loadu_ps(input + i);
+            __m512 vb = _mm512_loadu_ps(weights + i);
+            sum = _mm512_fmadd_ps(va, vb, sum);
         }
 
-        __m256 hsum = _mm256_hadd_ps(sum, sum);
-        hsum = _mm256_hadd_ps(hsum, hsum);
-
-        __m128 lo = _mm256_castps256_ps128(hsum);
-        __m128 hi = _mm256_extractf128_ps(hsum, 1);
-        __m128 result = _mm_add_ss(lo, hi);
-
-        return _mm_cvtss_f32(result) + bias;
+        float result = _mm512_reduce_add_ps(sum);
+        return result + bias;
     }
 
     void clearGradients() {
-        __m256 zero = _mm256_setzero_ps();
-        for (int i = 0; i < numWeights; i += 8)
-            _mm256_storeu_ps(gradientWeights + i, zero);
+        __m512 zero = _mm512_setzero_ps();
+        for (int i = 0; i < numWeights; i += 16)
+            _mm512_storeu_ps(gradientWeights + i, zero);
 
         gradientBias = 0;
     }

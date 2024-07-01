@@ -40,11 +40,11 @@ public:
         return activations;
     }
 
-    void calcOutputDelta(float target) const {
+    void calcOutputDelta(const float target) const {
         deltas[0] =  2 * (activations[0] - target) * activateDer(weightedInputs[0], SIGMOID);
     }
 
-    void calcHiddenDeltas(Layer *prevLayer) const {
+    void calcHiddenDeltas(const Layer *prevLayer) const {
         for (int i = 0; i < numNeurons; ++i) {
             float delta = 0;
             for (int j = 0; j < prevLayer->numNeurons; ++j) {
@@ -57,25 +57,25 @@ public:
         }
     }
 
-    void updateNeurons(float lr) const {
-        for (int i = 0; i < numNeurons; ++i)
-            neurons[i]->update(lr);
-    }
-
     void updateGradients() const {
         for (int i = 0; i < numNeurons; ++i) {
-            __m256 delta_avx = _mm256_set1_ps(deltas[i]);
+            __m512 delta_avx = _mm512_set1_ps(deltas[i]);
             float *gradientWeights = neurons[i]->getGradientWeights();
 
-            for (int j = 0; j + 7 < numPrevNeurons; j += 8) {
-                __m256 input_avx = _mm256_loadu_ps(input + j);
-                __m256 current_grad_avx = _mm256_loadu_ps(gradientWeights + j);
-                __m256 inputWeightDer_avx = _mm256_fmadd_ps(input_avx, delta_avx, current_grad_avx);
-                _mm256_storeu_ps(gradientWeights + j, inputWeightDer_avx);
+            for (int j = 0; j + 15 < numPrevNeurons; j += 16) {
+                __m512 input_avx = _mm512_loadu_ps(input + j);
+                __m512 current_grad_avx = _mm512_loadu_ps(gradientWeights + j);
+                __m512 inputWeightDer_avx = _mm512_fmadd_ps(input_avx, delta_avx, current_grad_avx);
+                _mm512_storeu_ps(gradientWeights + j, inputWeightDer_avx);
             }
 
             neurons[i]->updateGradientBias(deltas[i]);
         }
+    }
+
+    void updateNeurons(const float lr) const {
+        for (int i = 0; i < numNeurons; ++i)
+            neurons[i]->update(lr);
     }
 
     void clearAllGradients() const {

@@ -4,7 +4,6 @@ float Network::feedForward(NetInput& netInput) const {
     float* input = getSparseInput(netInput);
     for (int i = 0; i < numLayers; ++i)
         input = layers[i]->feedForward(input);
-
     return input[0];
 }
 
@@ -20,19 +19,13 @@ void Network::feedBackward(float target) const {
     }
 }
 
-float Network::evaluate(string& fen) const {
-    float* input = fenToInput(fen).data();
-    for (int i = 0; i < numLayers; ++i)
-        input = layers[i]->feedForward(input);
+void Network::saveWeights(int epoch) const {
+    const string weightsPath = "C:/Users/semio/Downloads/Astra-Weights/astra_weights_" + to_string(epoch) + "_768-64-1.nnue";
 
-    return input[0] * 250 - 125;
-}
-
-void Network::saveWeights() const {
-    ofstream file(WEIGHTS_PATH, ios::binary);
+    ofstream file(weightsPath, ios::binary);
 
     if (!file.is_open()) {
-        cerr << "Error opening file for writing: " << WEIGHTS_PATH << endl;
+        cerr << "Error opening file for writing: " << weightsPath << endl;
         return;
     }
 
@@ -55,11 +48,11 @@ void Network::saveWeights() const {
     file.close();
 }
 
-void Network::loadWeights() const {
-    ifstream file(WEIGHTS_PATH, ios::binary);
+void Network::loadWeights(const string& weightsPath) const {
+    ifstream file(weightsPath, ios::binary);
 
     if (!file.is_open()) {
-        cerr << "Error opening file for reading: " << WEIGHTS_PATH << endl;
+        cerr << "Error opening file for reading: " << weightsPath << endl;
         return;
     }
 
@@ -88,9 +81,9 @@ void Network::loadWeights() const {
 void Network::train(vector<NetInput>& data, const int epochs, const int batchSize) {
     shuffleData(data);
 
-    int dataSize = data.size();
-    int valSize = dataSize / 100;
-    int trainingSize = dataSize - valSize;
+    const int dataSize = data.size();
+    const int valSize = dataSize / 100;
+    const int trainingSize = dataSize - valSize;
 
     cout << "\nTraining Network with " << dataSize << " Positions\n" << endl;
 
@@ -106,7 +99,7 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
     for (int epoch = 1; epoch <= epochs; ++epoch) {
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
-            int endIdx = min((batch + 1) * batchSize, trainingSize);
+            int endIdx = min((batch + 1) * batchSize, trainingSize); 
 
             for (int i = startIdx; i < endIdx; ++i) {
                 feedForward(data[i]);
@@ -119,13 +112,12 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
             }
         }
 
-        if (epoch % 2 == 0) {
-            float validationLoss = getLoss(valData);
-            cout << setw(6) << epoch << setw(4) << "|" << validationLoss << endl;
-        }
-    }
+        float validationLoss = getLoss(valData);
+        cout << setw(6) << epoch << setw(4) << "|" << validationLoss << endl;
 
-    saveWeights();
+        // save weights after each epoch
+        saveWeights(epoch);
+    }
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::seconds>(endTime - startTime);

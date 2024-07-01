@@ -12,7 +12,7 @@ enum ActivationType {
 
 inline float relu(float x) { return x > 0 ? x : 0; }
 inline float leakyRelu(float x) { return x > 0 ? x : 0.01f * x; }
-inline float sigmoid(float x) { return 1 / (1 + exp(-x)); }
+inline float sigmoid(float x) { return 1 / (1 + std::exp(-x)); }
 
 inline float reluDer(float x) { return x > 0 ? 1 : 0; }
 inline float leakyReluDer(float x) { return x > 0 ? 1 : 0.01f; }
