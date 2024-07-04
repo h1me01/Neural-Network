@@ -6,16 +6,16 @@
 
 class Layer {
 public:
-    Layer(int numPrevNeurons, int numNeurons, ActivationType activationType) :
-    numPrevNeurons(numPrevNeurons), numNeurons(numNeurons), activationType(activationType) {
+    Layer(int numFeatures, int numNeurons, ActivationType activationType) :
+    numFeatures(numFeatures), numNeurons(numNeurons), activationType(activationType) {
         neurons = new Neuron *[numNeurons];
         weightedInputs = new float[numNeurons];
         activations = new float[numNeurons];
         deltas = new float[numNeurons];
-        input = new float[numPrevNeurons];
+        input = new float[numFeatures];
 
         for (int i = 0; i < numNeurons; ++i)
-            neurons[i] = new Neuron(numPrevNeurons);
+            neurons[i] = new Neuron(numFeatures);
     }
 
     ~Layer() {
@@ -30,7 +30,7 @@ public:
     }
 
     float *feedForward(float *currentInput) const {
-        copy_n(currentInput, numPrevNeurons, input);
+        copy_n(currentInput, numFeatures, input);
 
         for (int i = 0; i < numNeurons; ++i) {
             weightedInputs[i] = neurons[i]->dotProduct(input);
@@ -62,7 +62,7 @@ public:
             __m512 delta_avx = _mm512_set1_ps(deltas[i]);
             float *gradientWeights = neurons[i]->getGradientWeights();
 
-            for (int j = 0; j + 15 < numPrevNeurons; j += 16) {
+            for (int j = 0; j + 15 < numFeatures; j += 16) {
                 __m512 input_avx = _mm512_loadu_ps(input + j);
                 __m512 current_grad_avx = _mm512_loadu_ps(gradientWeights + j);
                 __m512 inputWeightDer_avx = _mm512_fmadd_ps(input_avx, delta_avx, current_grad_avx);
@@ -88,7 +88,7 @@ public:
     }
 
     [[nodiscard]] int getNumPrevNeurons() const {
-        return numPrevNeurons;
+        return numFeatures;
     }
 
     [[nodiscard]] int getNumNeurons() const {
@@ -98,7 +98,7 @@ public:
 private:
     ActivationType activationType;
 
-    int numPrevNeurons;
+    int numFeatures;
     int numNeurons;
 
     Neuron **neurons;

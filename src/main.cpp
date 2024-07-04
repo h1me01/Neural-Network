@@ -2,7 +2,7 @@
 
 const string DATA_PATH = "C:/Users/semio/Downloads/chess_data1.bin";
 
-const int EPOCHS = 50;
+const int EPOCHS = 10;
 const int BATCH_SIZE = 32;
 
 vector<string> TEST_POSITIONS = {

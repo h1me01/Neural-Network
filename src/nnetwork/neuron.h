@@ -16,7 +16,7 @@ inline float heInit(int numPrevNeurons) {
  */
 class Neuron {
 public:
-    explicit Neuron(int numPrevNeurons) : numWeights(numPrevNeurons), adam(numPrevNeurons) {
+    explicit Neuron(int numFeatures) : numWeights(numFeatures), adam(numFeatures) {
         gradientWeights = new float[numWeights];
         weights = new float[numWeights];
         gradientBias = 0;

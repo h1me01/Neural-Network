@@ -84,6 +84,7 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
     const int dataSize = data.size();
     const int valSize = dataSize / 100;
     const int trainingSize = dataSize - valSize;
+    const int numBatches = (trainingSize + batchSize - 1) / batchSize;
 
     cout << "\nTraining Network with " << dataSize << " Positions\n" << endl;
 
@@ -91,7 +92,6 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
     data.resize(trainingSize);
 
     auto startTime = chrono::high_resolution_clock::now();
-    const int numBatches = (trainingSize + batchSize - 1) / batchSize;
 
     cout << left << setw(6) << "Epoch" << setw(4) << "|" << "Validation Loss" << endl;
     cout << "--------------------------------------" << endl;
@@ -99,7 +99,7 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
     for (int epoch = 1; epoch <= epochs; ++epoch) {
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
-            int endIdx = min((batch + 1) * batchSize, trainingSize); 
+            int endIdx = min((batch + 1) * batchSize, trainingSize);
 
             for (int i = startIdx; i < endIdx; ++i) {
                 feedForward(data[i]);
@@ -112,11 +112,13 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
             }
         }
 
-        float validationLoss = getLoss(valData);
-        cout << setw(6) << epoch << setw(4) << "|" << validationLoss << endl;
+        if(epoch % 2 == 0) {
+            float validationLoss = getLoss(valData);
+            cout << setw(6) << epoch << setw(4) << "|" << validationLoss << endl;
+        }
 
         // save weights after each epoch
-        saveWeights(epoch);
+        //saveWeights(epoch);
     }
 
     auto endTime = chrono::high_resolution_clock::now();
