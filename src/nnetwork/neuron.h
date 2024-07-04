@@ -20,7 +20,7 @@ public:
         gradientWeights = new float[numWeights];
         weights = new float[numWeights];
         gradientBias = 0;
-        bias = 0.01f;
+        bias = 0;
 
         for (int i = 0; i < numWeights; ++i) {
             gradientWeights[i] = 0;
