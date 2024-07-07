@@ -4,7 +4,11 @@ float Network::feedForward(NetInput& netInput) const {
     float* input = getSparseInput(netInput);
     for (int i = 0; i < numLayers; ++i)
         input = layers[i]->feedForward(input);
-    return input[0];
+
+    float prediction = input[0];
+    delete[] input;
+
+    return prediction;
 }
 
 void Network::feedBackward(float target) const {
