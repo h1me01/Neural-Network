@@ -79,8 +79,6 @@ void Network::loadWeights(const string& weightsPath) const {
 }
 
 void Network::train(vector<NetInput>& data, const int epochs, const int batchSize) {
-    shuffleData(data);
-
     const int dataSize = data.size();
     const int valSize = dataSize / 100;
     const int trainingSize = dataSize - valSize;
@@ -97,6 +95,8 @@ void Network::train(vector<NetInput>& data, const int epochs, const int batchSiz
     cout << "--------------------------------------" << endl;
 
     for (int epoch = 1; epoch <= epochs; ++epoch) {
+        shuffleData(data);
+
         for (int batch = 0; batch < numBatches; ++batch) {
             int startIdx = batch * batchSize;
             int endIdx = min((batch + 1) * batchSize, trainingSize);
