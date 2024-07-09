@@ -29,8 +29,16 @@ public:
         delete[] input;
     }
 
-    float *feedForward(float *currentInput) const {
+   float *feedForward(float *currentInput) const {
         copy_n(currentInput, numFeatures, input);
+
+        // only deallocate the input to the hidden layer
+        // note that because we return the activations of the current layer
+        // we don't want to deallocate them by accident, since they are used
+        // in the next layer and if the next layer cant access them, the whole
+        // program will crash
+        if(numFeatures == NUM_FEATURES)
+            delete[] currentInput;
 
         for (int i = 0; i < numNeurons; ++i) {
             weightedInputs[i] = neurons[i]->dotProduct(input);
