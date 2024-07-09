@@ -49,9 +49,14 @@ inline Network::~Network() {
 }
 
 inline float Network::evaluate(string& fen) const {
-    float* input = fenToInput(fen).data();
+    float* input = new float[NUM_FEATURES];
+    vector<float> sparseInput = fenToInput(fen);
+
+    copy(sparseInput.begin(), sparseInput.end(), input);
+
     for (int i = 0; i < numLayers; ++i)
         input = layers[i]->feedForward(input);
+
     return input[0] * 250 - 125;
 }
 
