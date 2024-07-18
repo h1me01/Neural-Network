@@ -49,7 +49,7 @@ public:
     }
 
     void calcOutputDelta(const float target) const {
-        deltas[0] = (activations[0] - target) * activateDer(weightedInputs[0], SIGMOID);
+        deltas[0] = 2 * (activations[0] - target) * activateDer(weightedInputs[0], SIGMOID);
     }
 
     void calcHiddenDeltas(const Layer *prevLayer) const {
