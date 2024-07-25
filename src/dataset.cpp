@@ -3,7 +3,7 @@
 /*
  * HELPER FUNCTIONS
  */
-int pieceIndex(char c) {
+int pieceType(char c) {
     const string pieces = "pnbrqk";
     return pieces.find(tolower(c));
 }
@@ -12,20 +12,21 @@ int mirrorVertically(int sq) {
     return sq ^ 56;
 }
 
-int index(int psq, char p) {
+int index(int psq, char p, Color view) {
     Color pc = isupper(p) ? WHITE : BLACK;
-
-    if (pc != WHITE)
+    if(view != WHITE) {
         psq = mirrorVertically(psq);
+    }
 
-    return psq + 64 * pieceIndex(p) + pc * 64 * 6;
+    return psq + pieceType(p) * 64 + (pc != view) * 64 * 6;
 }
 
-int index(int psq, int pt, Color pc) {
-    if (pc != WHITE)
+int index(int psq, int pt, Color pc, Color view) {
+    if(view != WHITE) {
         psq = mirrorVertically(psq);
+    }
 
-    return psq + 64 * pt + pc * 64 * 6;
+    return psq + pt * 64 + (pc != view) * 64 * 6;
 }
 
 /*
@@ -59,13 +60,14 @@ vector<NetInput> getNetData(const string &filePath, int dataSize) {
 
 float *getSparseInput(NetInput &netInput) {
     auto *sparseInput = new float[NUM_FEATURES]{};
+    Color stm = netInput.stm;
 
     for (int i = 0; i < NUM_COLORS; ++i) {
         for (int j = 0; j < 6; ++j) {
             uint64_t piece = netInput.pieces[i][j];
             while (piece) {
                 int sq = popLsb(piece);
-                int idx = index(sq, j, (Color) i);
+                int idx = index(sq, j, (Color) i, stm);
 
                 sparseInput[idx] = 1.0f;
             }
@@ -77,6 +79,7 @@ float *getSparseInput(NetInput &netInput) {
 
 vector<float> fenToInput(string &fen) {
     vector<float> input(NUM_FEATURES, 0);
+    Color stm = fen.find('w') != string::npos ? WHITE : BLACK;
 
     int rank = 7, file = -1;
     for (char c: fen) {
@@ -89,9 +92,9 @@ vector<float> fenToInput(string &fen) {
         } else {
             file++;
             int sq = 8 * rank + file;
-            int idx = index(sq, c);
+            int idx = index(sq, c, stm);
 
-            input[idx] = 1;
+            input[idx] = 1.0f;
         }
     }
 
