@@ -12,19 +12,20 @@ int mirrorVertically(int sq) {
     return sq ^ 56;
 }
 
-int index(int psq, char p, Color view) {
-    if (view != WHITE)
+int index(int psq, char p) {
+    Color pc = isupper(p) ? WHITE : BLACK;
+
+    if (pc != WHITE)
         psq = mirrorVertically(psq);
 
-    Color pc = isupper(p) ? WHITE : BLACK;
-    return psq + 64 * pieceIndex(p) + (pc != view) * 64 * 6;
+    return psq + 64 * pieceIndex(p) + pc * 64 * 6;
 }
 
-int index(int psq, int pt, Color pc, Color view) {
-    if (view != WHITE)
+int index(int psq, int pt, Color pc) {
+    if (pc != WHITE)
         psq = mirrorVertically(psq);
 
-    return psq + 64 * pt + (pc != view) * 64 * 6;
+    return psq + 64 * pt + pc * 64 * 6;
 }
 
 /*
@@ -64,7 +65,7 @@ float *getSparseInput(NetInput &netInput) {
             uint64_t piece = netInput.pieces[i][j];
             while (piece) {
                 int sq = popLsb(piece);
-                int idx = index(sq, j, (Color) i, netInput.stm);
+                int idx = index(sq, j, (Color) i);
 
                 sparseInput[idx] = 1.0f;
             }
@@ -76,7 +77,6 @@ float *getSparseInput(NetInput &netInput) {
 
 vector<float> fenToInput(string &fen) {
     vector<float> input(NUM_FEATURES, 0);
-    Color stm = fen.find('w') != string::npos ? WHITE : BLACK;
 
     int rank = 7, file = -1;
     for (char c: fen) {
@@ -89,7 +89,7 @@ vector<float> fenToInput(string &fen) {
         } else {
             file++;
             int sq = 8 * rank + file;
-            int idx = index(sq, c, stm);
+            int idx = index(sq, c);
 
             input[idx] = 1;
         }
