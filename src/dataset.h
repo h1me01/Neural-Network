@@ -18,7 +18,6 @@ enum Color : int {
 struct NetInput {
     uint64_t pieces[NUM_COLORS][6]{};
     float target;
-    Color stm;
 
     NetInput() {
         target = 0.0f;
