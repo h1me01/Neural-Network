@@ -69,7 +69,7 @@ public:
     void updateGradients() const {
         for (int i = 0; i < output_size; ++i) {
             __m512 delta_avx = _mm512_set1_ps(deltas[i]);
-            float *weight_graidents = neurons[i]->getGradientWeights();
+            float *weight_graidents = neurons[i]->getWeightGrads();
 
             for (int j = 0; j + 15 < input_size; j += 16) {
                 __m512 input_avx = _mm512_loadu_ps(input + j);
@@ -78,29 +78,31 @@ public:
                 _mm512_storeu_ps(weight_graidents + j, inputWeightDer_avx);
             }
 
-            neurons[i]->updateGradientBias(deltas[i]);
+            neurons[i]->updateBiasGrad(deltas[i]);
         }
     }
 
     void updateNeurons(const float lr) const {
-        for (int i = 0; i < output_size; ++i)
+        for (int i = 0; i < output_size; ++i) {
             neurons[i]->update(lr);
+        }
     }
 
     void clearAllGradients() const {
-        for (int i = 0; i < output_size; ++i)
+        for (int i = 0; i < output_size; ++i) {
             neurons[i]->clearGradients();
+        }
     }
 
     [[nodiscard]] Neuron **getNeurons() const {
         return neurons;
     }
 
-    [[nodiscard]] int getNumPrevNeurons() const {
+    [[nodiscard]] int getInputSize() const {
         return input_size;
     }
 
-    [[nodiscard]] int getNumNeurons() const {
+    [[nodiscard]] int getOutputSize() const {
         return output_size;
     }
 

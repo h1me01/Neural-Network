@@ -29,8 +29,8 @@ void Network::saveWeights(int epoch) const {
     }
 
     for (int i = 0; i < num_layers; ++i) {
-        int input_size = layers[i]->getNumPrevNeurons();
-        int output_size = layers[i]->getNumNeurons();
+        int input_size = layers[i]->getInputSize();
+        int output_size = layers[i]->getOutputSize();
 
         file.write(reinterpret_cast<char *>(&input_size), sizeof(int));
         file.write(reinterpret_cast<char *>(&output_size), sizeof(int));

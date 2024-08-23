@@ -59,11 +59,11 @@ public:
         adam.updateWeights(lr, weights, weight_grads);
     }
 
-    void updateGradientBias(float val) {
+    void updateBiasGrad(float val) {
         bias_grad += val;
     }
 
-    [[nodiscard]] int getNumWeights() const {
+    [[nodiscard]] int getSize() const {
         return weights_size;
     }
 
@@ -71,7 +71,7 @@ public:
         return weights;
     }
 
-    [[nodiscard]] float *getGradientWeights() const {
+    [[nodiscard]] float *getWeightGrads() const {
         return weight_grads;
     }
 
