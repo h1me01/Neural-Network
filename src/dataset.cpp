@@ -71,10 +71,10 @@ float *getSparseInput(const NetInput &net_input) {
             uint64_t piece = net_input.pieces[c][j];
             while (piece) {
                 const int sq = popLsb(piece);
-                const int w_idx = index(sq, j, c, stm);
-                const int b_idx = index(sq, j, c, opp_stm);
-                sparse[w_idx] = 1;
-                sparse[b_idx] = 1;
+                const int idx1 = index(sq, j, c, stm);
+                const int idx2 = index(sq, j, c, opp_stm);
+                sparse[idx1] = 1;
+                sparse[NUM_FEATURES + idx2] = 1;
             }
         }
     }
