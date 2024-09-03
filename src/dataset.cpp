@@ -85,6 +85,7 @@ float *getSparseInput(const NetInput &net_input) {
 vector<float> fenToInput(string &fen) {
     vector<float> input(NUM_FEATURES, 0);
     Color stm = fen.find('w') != string::npos ? WHITE : BLACK;
+    Color opp_stm = stm == WHITE ? BLACK : WHITE;
 
     int rank = 7, file = -1;
     for (const char c: fen) {
@@ -97,8 +98,10 @@ vector<float> fenToInput(string &fen) {
         } else {
             file++;
             const int sq = 8 * rank + file;
-            const int idx = index(sq, c, stm);
-            input[idx] = 1;
+            const int idx1 = index(sq, c, stm);
+            const int idx2 = index(sq, c, opp_stm);
+            input[idx1] = 1;
+            input[NUM_FEATURES + idx2] = 1;
         }
     }
 
