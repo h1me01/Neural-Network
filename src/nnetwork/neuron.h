@@ -90,13 +90,12 @@ public:
 
 private:
     Adam adam;
-
     int weights_size;
-
     float *weight_grads;
     float bias_grad;
     float *weights;
     float bias;
+
 };
 
 #endif //ASTRA_NNETWORK_NEURON_H

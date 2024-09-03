@@ -9,13 +9,23 @@ enum ActivationType {
     SIGMOID
 };
 
-constexpr float SigmoidScaler = 0.00055254;
+constexpr float SigmoidScaler = 0.0015;
 
-inline float relu(float x) { return x > 0 ? x : 0; }
-inline float sigmoid(float x) { return 1 / (1 + std::exp(-SigmoidScaler * x)); }
+inline float relu(float x) {
+    return x > 0 ? x : 0;
+}
 
-inline float reluDer(float x) { return x > 0 ? 1 : 0; }
-inline float sigmoidDer(float x) { return x * (1 - x) * SigmoidScaler; }
+inline float sigmoid(float x) {
+    return 1 / (1 + std::exp(-SigmoidScaler * x));
+}
+
+inline float reluDer(float x) {
+    return x > 0 ? 1 : 0;
+}
+
+inline float sigmoidDer(float x) {
+    return x * (1 - x) * SigmoidScaler;
+}
 
 inline float activate(float x, ActivationType type) {
     switch (type) {

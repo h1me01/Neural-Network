@@ -1,9 +1,9 @@
 #include "nnetwork/network.h"
 
-const string DATA_PATH = "C:/Users/semio/Downloads/chess_data.bin";
+const string DATA_PATH = "C:/Users/semio/Downloads/chess_data1.bin";
 
 constexpr int EPOCHS = 50;
-constexpr int BATCH_SIZE = 128;
+constexpr int BATCH_SIZE = 32;
 
 vector<string> TEST_POSITIONS = {
     "3k4/5K2/8/4P3/8/8/8/8 b - - 2 11", // KPvk

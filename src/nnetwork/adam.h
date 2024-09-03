@@ -9,7 +9,7 @@ public:
         m_weights = new float[numWeights];
         v_weights = new float[numWeights];
 
-        for (int i = 0; i < numWeights; ++i) {
+        for (int i = 0; i < numWeights; i++) {
             m_weights[i] = 0;
             v_weights[i] = 0;
         }
@@ -51,9 +51,9 @@ public:
     }
 
 private:
-    const float beta1 = 0.95f;
-    const float beta2 = 0.999f;
-    const float epsilon = 1e-8f;
+    const float beta1 = 0.95;
+    const float beta2 = 0.999;
+    const float epsilon = 1e-8;
 
     int weights_size;
 

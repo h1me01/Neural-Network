@@ -19,17 +19,13 @@ struct NetInput {
     uint64_t pieces[NUM_COLORS][6]{};
     float target;
     Color stm;
-
-    NetInput() {
-        target = 0.0f;
-    }
 };
 
 void shuffleData(vector<NetInput> &data);
 
 vector<NetInput> getNetData(const string &path, int data_size = INT_MAX);
 
-float* getSparseInput(NetInput &net_input);
+float* getSparseInput(const NetInput &net_input);
 
 vector<float> fenToInput(string &fen);
 
