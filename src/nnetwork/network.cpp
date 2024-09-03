@@ -128,7 +128,7 @@ void Network::train(vector<NetInput> &data, const int epochs, const int batch_si
         epoch_time_accumulator += epoch_time_seconds;
 
         if (epoch % 3 == 0) {
-            float val_loss = getLoss(val_data);
+            float val_loss = getLoss(data);
             double avg_epoch_time = epoch_time_accumulator / 3.0;
 
             cout << setw(6) << epoch << setw(2) << "|" << setw(15) << val_loss << setw(3) << " |" << avg_epoch_time << std::endl;

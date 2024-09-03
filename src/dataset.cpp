@@ -45,10 +45,13 @@ vector<NetInput> getNetData(const string &path, int data_size) {
         return net_data;
     }
 
-    NetInput netInput;
-    while (file.read(reinterpret_cast<char *>(&netInput), sizeof(NetInput))) {
-        netInput.target = sigmoid(netInput.target);
-        net_data.push_back(netInput);
+    NetInput net_input;
+    while (file.read(reinterpret_cast<char *>(&net_input), sizeof(NetInput))) {
+        if(net_input.stm == BLACK) {
+            net_input.target = -net_input.target;
+        }
+        net_input.target = sigmoid(net_input.target);
+        net_data.push_back(net_input);
 
         if (net_data.size() >= data_size) {
             break;
@@ -63,13 +66,13 @@ float *getSparseInput(const NetInput &net_input) {
     Color stm = net_input.stm;
     Color opp_stm = stm == WHITE ? BLACK : WHITE;
 
-    for (const auto &i: net_input.pieces) {
+    for (const Color c : {WHITE, BLACK}) {
         for (int j = 0; j < 6; j++) {
-            uint64_t piece = i[j];
+            uint64_t piece = net_input.pieces[c][j];
             while (piece) {
                 const int sq = popLsb(piece);
-                const int w_idx = index(sq, j, stm, stm);
-                const int b_idx = index(sq, j, opp_stm, stm);
+                const int w_idx = index(sq, j, c, stm);
+                const int b_idx = index(sq, j, c, opp_stm);
                 sparse[w_idx] = 1;
                 sparse[b_idx] = 1;
             }
