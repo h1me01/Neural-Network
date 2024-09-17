@@ -9,7 +9,7 @@ enum ActivationType {
     SIGMOID
 };
 
-constexpr float SigmoidScaler = 0.0015;
+constexpr float SigmoidScaler = 0.00459;
 
 inline float relu(float x) {
     return x > 0 ? x : 0;

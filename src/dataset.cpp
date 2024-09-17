@@ -1,5 +1,6 @@
 #include "dataset.h"
 #include "nnetwork/activation.h"
+#include <cassert>
 
 /*
  * HELPER FUNCTIONS
@@ -14,7 +15,6 @@ int index(int psq, char p, Color view) {
     if (view != WHITE) {
         psq = psq ^ 56;
     }
-
     return psq + pieceType(p) * 64 + (pc != view) * 64 * 6;
 }
 
@@ -73,6 +73,9 @@ float *getSparseInput(const NetInput &net_input) {
                 const int sq = popLsb(piece);
                 const int idx1 = index(sq, j, c, stm);
                 const int idx2 = index(sq, j, c, opp_stm);
+
+
+
                 sparse[idx1] = 1;
                 sparse[NUM_FEATURES + idx2] = 1;
             }
@@ -83,7 +86,7 @@ float *getSparseInput(const NetInput &net_input) {
 }
 
 vector<float> fenToInput(string &fen) {
-    vector<float> input(NUM_FEATURES, 0);
+    vector<float> input(2 * NUM_FEATURES, 0);
     Color stm = fen.find('w') != string::npos ? WHITE : BLACK;
     Color opp_stm = stm == WHITE ? BLACK : WHITE;
 
@@ -100,6 +103,10 @@ vector<float> fenToInput(string &fen) {
             const int sq = 8 * rank + file;
             const int idx1 = index(sq, c, stm);
             const int idx2 = index(sq, c, opp_stm);
+
+            assert(idx1 >= 0 && idx1 < NUM_FEATURES);
+            assert(idx2 >= 0 && idx2 < NUM_FEATURES);
+
             input[idx1] = 1;
             input[NUM_FEATURES + idx2] = 1;
         }
