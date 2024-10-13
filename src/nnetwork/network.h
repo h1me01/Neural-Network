@@ -4,7 +4,7 @@
 #include "layer.h"
 
 constexpr int INPUT_SIZE = 2 * 768;
-constexpr int HIDDEN_SIZE = 2 * 512;
+constexpr int HIDDEN_SIZE = 256;
 constexpr int OUTPUT_SIZE = 1;
 
 constexpr float LEARNING_RATE = 0.01f;
@@ -53,8 +53,8 @@ inline Network::~Network() {
 
 inline float Network::evaluate(string &fen) const {
     auto *input = new float[NUM_FEATURES];
-    vector<float> sparse_input = fenToInput(fen);
-    copy(sparse_input.begin(), sparse_input.end(), input);
+    vector<float> dense_input = fenToInput(fen);
+    copy(dense_input.begin(), dense_input.end(), input);
 
     for (int i = 0; i < num_layers; i++) {
         layers[i]->feedForward(input);
