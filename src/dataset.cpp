@@ -61,8 +61,8 @@ vector<NetInput> getNetData(const string &path, int data_size) {
     return net_data;
 }
 
-float *getSparseInput(const NetInput &net_input) {
-    auto *sparse = new float[2 * NUM_FEATURES]{};
+float *getDenseInput(const NetInput &net_input) {
+    auto *dense = new float[2 * NUM_FEATURES]{};
     Color stm = net_input.stm;
     Color opp_stm = stm == WHITE ? BLACK : WHITE;
 
@@ -76,13 +76,13 @@ float *getSparseInput(const NetInput &net_input) {
 
 
 
-                sparse[idx1] = 1;
-                sparse[NUM_FEATURES + idx2] = 1;
+                dense[idx1] = 1;
+                dense[NUM_FEATURES + idx2] = 1;
             }
         }
     }
 
-    return sparse;
+    return dense;
 }
 
 vector<float> fenToInput(string &fen) {
