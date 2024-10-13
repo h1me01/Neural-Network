@@ -25,7 +25,7 @@ void shuffleData(vector<NetInput> &data);
 
 vector<NetInput> getNetData(const string &path, int data_size = INT_MAX);
 
-float* getSparseInput(const NetInput &net_input);
+float* getDenseInput(const NetInput &net_input);
 
 vector<float> fenToInput(string &fen);
 
