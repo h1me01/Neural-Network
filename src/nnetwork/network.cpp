@@ -1,7 +1,7 @@
 #include "network.h"
 
 float Network::feedForward(NetInput &net_input) const {
-    float *input = getSparseInput(net_input);
+    float *input = getDenseInput(net_input);
     for (int i = 0; i < num_layers; i++) {
         layers[i]->feedForward(input);
         delete[] input;
