@@ -1,1 +1,1 @@
-Mainly used to understand neural networks used in chess.
+Mainly used to understand neural networks in chess.
