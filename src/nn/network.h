@@ -5,8 +5,8 @@
 
 #include "data/include.h"
 #include "layers/include.h"
-#include "loss/loss.h"
-#include "optimizer/optimizer.h"
+#include "loss/include.h"
+#include "optimizer/include.h"
 
 class Network {
   public:
